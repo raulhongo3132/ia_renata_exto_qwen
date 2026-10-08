@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Variables y Modos (Claro / Oscuro)
+   ========================================================================== */
+:root {
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --border-color: #e9ecef;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  /* Prioridades */
+  --critica-bg: #fef2f2;
+  --critica-text: #991b1b;
+  --alta-bg: #fff7ed;
+  --alta-text: #c2410c;
+  --media-bg: #fefce8;
+  --media-text: #854d0e;
+  --baja-bg: #f0fdf4;
+  --baja-text: #166534;
+
+  /* Mensajes / Avisos */
+  --aviso-bg: #eff6ff;
+  --aviso-border: #bfdbfe;
+  --aviso-text: #1e40af;
+  --err-bg: #fef2f2;
+  --err-border: #fecaca;
+  --err-text: #991b1b;
+}
+
+[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+
+  /* Prioridades (modo oscuro contrastado) */
+  --critica-bg: #450a0a;
+  --critica-text: #fca5a5;
+  --alta-bg: #431407;
+  --alta-text: #fdba74;
+  --media-bg: #422006;
+  --media-text: #fef08a;
+  --baja-bg: #052e16;
+  --baja-text: #86efac;
+
+  /* Mensajes / Avisos */
+  --aviso-bg: #172554;
+  --aviso-border: #1e40af;
+  --aviso-text: #bfdbfe;
+  --err-bg: #450a0a;
+  --err-border: #991b1b;
+  --err-text: #fca5a5;
+}
+
+/* ==========================================================================
+   Base y Layout
+   ========================================================================== */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  line-height: 1.5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Encabezado y Navegación */
+.header-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+h2, h3, h4 {
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+h2 small, h3 small, h4 small {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.nav-usuario {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.95rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Componentes y Tablas
+   ========================================================================== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background-color: var(--border-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Clases de Prioridad (Badges) */
+.critica, .alta, .media, .baja {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85em;
+  display: inline-block;
+}
+
+.critica { background-color: var(--critica-bg); color: var(--critica-text); }
+.alta    { background-color: var(--alta-bg);    color: var(--alta-text); }
+.media   { background-color: var(--media-bg);   color: var(--media-text); }
+.baja    { background-color: var(--baja-bg);    color: var(--baja-text); }
+
+/* Avisos y Mensajes de Flash */
+.aviso, .err {
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px solid;
+}
+
+.aviso {
+  background-color: var(--aviso-bg);
+  border-color: var(--aviso-border);
+  color: var(--aviso-text);
+}
+
+.err {
+  background-color: var(--err-bg);
+  border-color: var(--err-border);
+  color: var(--err-text);
+}
+
+/* ==========================================================================
+   Formularios y Botones
+   ========================================================================== */
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+input, textarea, select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--primary-color);
+  border-color: transparent;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin-top: 0.5rem;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Botón de tema claro/oscuro */
+.btn-theme {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  margin-top: 0;
+}
+
+.btn-theme:hover {
+  background-color: var(--border-color);
+}

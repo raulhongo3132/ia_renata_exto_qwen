@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block cuerpo %}
+<h3>Nuevo ticket · Sucursal {{ usuario.sucursal_nombre }}</h3>
+<form method="post" onsubmit="var b=this.querySelector('button');b.disabled=true;b.textContent='Procesando…'">
+<label>Título<input name="titulo" maxlength="120" required value="{{ f.get('titulo','') }}"></label>
+<label>Descripción del problema<textarea name="descripcion_libre" rows="5" maxlength="2000" required>{{ f.get('descripcion_libre','') }}</textarea></label>
+<label>Contacto (nombre y extensión)<input name="contacto" required value="{{ f.get('contacto','') }}"></label>
+<label>Categoría (opcional)<select name="categoria_declarada">
+<option value="">No sé</option>
+{% for x in ['red','servidor','aplicacion','otro'] %}<option {{ 'selected' if f.get('categoria_declarada') == x }}>{{ x }}</option>{% endfor %}
+</select></label>
+<label>Equipo afectado (opcional)<input name="equipo_afectado" value="{{ f.get('equipo_afectado','') }}"></label>
+<p><button>Crear ticket</button></p></form>
+{% endblock %}

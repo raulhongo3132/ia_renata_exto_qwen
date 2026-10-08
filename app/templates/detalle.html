@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% block cuerpo %}
+<h3>Ticket #{{ t.id }} · {{ t.titulo }}</h3>
+<p>Sucursal {{ t.sucursal_nombre }} · creado {{ t.fecha_creacion }} · contacto {{ t.contacto }}<br>
+Estado <b>{{ t.estado }}</b> · prioridad <span class="{{ t.prioridad_final }}">{{ t.prioridad_final }}</span>
+· técnico {{ t.tecnico_nombre or 'sin asignar' }}</p>
+<p style="white-space:pre-wrap">{{ t.descripcion_libre }}</p>
+{% if t.equipo_afectado %}<p>Equipo: {{ t.equipo_afectado }}</p>{% endif %}
+
+{% if usuario.rol == 'sucursal' %}
+  {% if t.estado in ('resuelto','cerrado') %}<div class="aviso"><b>Acciones realizadas:</b> {{ t.acciones_realizadas }}</div>{% endif %}
+  {% if t.estado == 'resuelto' %}<form method="post" action="{{ url_for('cerrar', tid=t.id) }}"><button>Confirmar que quedó resuelto</button></form>{% endif %}
+{% else %}
+  <h4>Sugerencia del sistema <small>(generada por un modelo de 3B: puede equivocarse)</small></h4>
+  {% if t.error_llm %}<div class="err">El modelo falló: {{ t.error_llm }}</div>{% endif %}
+  <table>
+  <tr><th>Tipo</th><td>{{ t.tipo or '—' }} (categoría declarada: {{ t.categoria_declarada or '—' }})</td></tr>
+  <tr><th>Causa probable</th><td>{{ t.causa_probable or '—' }}</td></tr>
+  <tr><th>Acción sugerida</th><td>{{ t.accion_sugerida or '—' }}</td></tr>
+  <tr><th>Prioridad</th><td>sugerida: {{ t.prioridad_sugerida or '—' }} → <b>final: {{ t.prioridad_final }}</b><br>{{ t.regla_aplicada }}</td></tr>
+  <tr><th>Confianza</th><td>calculada (código): {{ t.confianza_calculada }} · del modelo (no calibrada): {{ t.confianza_llm }}</td></tr>
+  <tr><th>Datos faltantes</th><td>código: {{ fc|join(', ') or 'ninguno' }} · modelo: {{ fl|join(', ') or 'ninguno' }}</td></tr>
+  <tr><th>Asignación</th><td>{{ t.motivo_asignacion }}</td></tr>
+  <tr><th>Inferencia</th><td>{{ t.modelo }} · prompt {{ t.version_prompt }} · {{ t.tiempo_inferencia_ms }} ms</td></tr>
+  </table>
+  {% if casos %}<h4>Casos de la BC que usó el modelo</h4>
+  {% for c in casos %}<div class="aviso"><b>{{ c.id }}</b> ({{ c.tipo }}, {{ c.sucursal }}): {{ c.descripcion }}<br>
+  <i>Causa:</i> {{ c.causa }}<br><i>Solución:</i> {{ c.solucion }}</div>{% endfor %}{% endif %}
+
+  {% if t.tecnico_id is none %}
+    <form method="post" action="{{ url_for('tomar', tid=t.id) }}"><button>Tomar este ticket</button></form>
+  {% elif t.estado in abiertos %}
+    {% if t.estado != 'en_atencion' %}<form method="post" action="{{ url_for('iniciar', tid=t.id) }}"><button>Iniciar atención</button></form>{% endif %}
+    <h4>Registrar resolución</h4>
+    <form method="post" action="{{ url_for('resolver', tid=t.id) }}">
+    {% if t.causa_probable %}<label>¿El diagnóstico sugerido es correcto?<select name="diagnostico_confirmado"><option value="si">Sí</option><option value="no">No</option></select></label>
+    {% else %}<input type="hidden" name="diagnostico_confirmado" value="no">{% endif %}
+    <label>Causa real (obligatoria si el diagnóstico no es correcto)<textarea name="causa_real" rows="2"></textarea></label>
+    <label>Tipo real<select name="tipo">{% for x in ['red','servidor','aplicacion','otro'] %}<option {{ 'selected' if x == t.tipo }}>{{ x }}</option>{% endfor %}</select></label>
+    <label>Acciones realizadas<textarea name="acciones_realizadas" rows="4" required></textarea></label>
+    <label>¿Agregar este caso a la base de conocimientos?<select name="agregar_a_bc"><option value="si">Sí</option><option value="no" selected>No</option></select></label>
+    <p><button>Marcar como resuelto</button></p></form>
+  {% endif %}
+  <h4>Historial</h4>
+  <table>{% for h in hist %}<tr><td>{{ h.fecha }}</td><td>{{ h.estado_anterior or '—' }} → {{ h.estado_nuevo }}</td><td>{{ h.nota or '' }}</td></tr>{% endfor %}</table>
+{% endif %}
+{% endblock %}

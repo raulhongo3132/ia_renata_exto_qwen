@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block cuerpo %}
+<h3>Entrar como…</h3>
+<p>Selector sin contraseña: demostración conceptual (limitación de seguridad declarada).</p>
+<form method="post"><select name="uid">
+{% for u in usuarios %}<option value="{{ u.id }}">{{ u.nombre }} ({{ u.rol }})</option>{% endfor %}
+</select><button>Entrar</button></form>
+{% endblock %}

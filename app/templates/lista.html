@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block cuerpo %}
+{% macro tabla(filas) %}
+<table><tr><th>#</th><th>Título</th><th>Sucursal</th><th>Estado</th><th>Prioridad</th><th>Técnico</th><th></th></tr>
+{% for t in filas %}<tr><td>{{ t.id }}</td><td>{{ t.titulo }}</td><td>{{ t.sucursal_nombre }}</td><td>{{ t.estado }}</td>
+<td class="{{ t.prioridad_final }}">{{ t.prioridad_final }}</td><td>{{ t.tecnico_nombre or '—' }}</td>
+<td><a href="{{ url_for('detalle', tid=t.id) }}">Ver</a></td></tr>
+{% else %}<tr><td colspan="7">Sin tickets.</td></tr>{% endfor %}</table>
+{% endmacro %}
+<h3>{{ titulo }}</h3>{{ tabla(filas) }}
+{% if libres is not none %}<h3>Sin asignar</h3>{{ tabla(libres) }}{% endif %}
+{% endblock %}

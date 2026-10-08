@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TecnoServ</title>
+  <!-- Archivo CSS externo -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+
+<header class="header-principal">
+  <div>
+    <h2>TecnoServ · Tickets <small>(datos FICTICIOS · proyecto académico)</small></h2>
+    {% if usuario %}
+      <p class="nav-usuario">
+        <b>{{ usuario.nombre }}</b> ({{ usuario.rol }}) · 
+        <a href="{{ url_for('inicio') }}">Inicio</a>
+        {% if usuario.rol == 'sucursal' %}
+          · <a href="{{ url_for('nuevo') }}">Nuevo ticket</a>
+        {% endif %}
+        · <a href="{{ url_for('salir') }}">Salir</a>
+      </p>
+    {% endif %}
+  </div>
+  
+  <!-- Botón para alternar tema -->
+  <button id="theme-toggle" type="button" class="btn-theme" aria-label="Cambiar tema">
+    🌙 Modo oscuro
+  </button>
+</header>
+
+<main>
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+    <div class="{{ cat }}">{{ msg }}</div>
+  {% endfor %}
+
+  {% block cuerpo %}{% endblock %}
+</main>
+
+<script>
+  const toggleBtn = document.getElementById('theme-toggle');
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // 1. Determinar el tema inicial
+  let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+  // 2. Aplicar el tema inicial a la página
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  toggleBtn.textContent = currentTheme === 'dark' ? '☀️ Modo claro' : '🌙 Modo oscuro';
+
+  // 3. Evento al hacer clic en el botón
+  toggleBtn.addEventListener('click', () => {
+    let activeTheme = document.documentElement.getAttribute('data-theme');
+    let newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    toggleBtn.textContent = newTheme === 'dark' ? '☀️ Modo claro' : '🌙 Modo oscuro';
+  });
+</script>
+
+</body>
+</html>
